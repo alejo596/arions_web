@@ -1,0 +1,232 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  EDITOR
+  SUPERVISOR
+}
+
+enum NewsStatus {
+  DRAFT
+  PUBLISHED
+  SCHEDULED
+}
+
+enum ProjectType {
+  INNOVATION
+  CONSTRUCTION
+}
+
+enum ProjectStatus {
+  PLANNING
+  IN_PROGRESS
+  COMPLETED
+  MAINTENANCE
+}
+
+enum ContactStatus {
+  PENDING
+  READ
+  REPLIED
+}
+
+model User {
+  id           String        @id @default(uuid())
+  email        String        @unique
+  password     String
+  name         String
+  role         Role          @default(EDITOR)
+  avatarUrl    String?
+  isActive     Boolean       @default(true)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  createdBy    String?
+  updatedBy    String?
+
+  news         News[]        @relation("NewsAuthor")
+  refreshTokens RefreshToken[]
+  auditLogs    AuditLog[]
+
+  @@map("users")
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@map("refresh_tokens")
+}
+
+model NewsCategory {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  slug        String   @unique
+  description String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  news        News[]
+
+  @@map("news_categories")
+}
+
+model News {
+  id          String       @id @default(uuid())
+  title       String
+  slug        String       @unique
+  summary     String
+  content     String       @db.Text
+  imageWebp   String
+  categoryId  String
+  category    NewsCategory @relation(fields: [categoryId], references: [id])
+  authorId    String
+  author      User         @relation("NewsAuthor", fields: [authorId], references: [id])
+  publishedAt DateTime     @default(now())
+  status      NewsStatus   @default(PUBLISHED)
+  tags        String[]     @default([])
+  isActive    Boolean      @default(true)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  createdBy   String?
+  updatedBy   String?
+
+  @@map("news")
+}
+
+model Project {
+  id                 String        @id @default(uuid())
+  title              String
+  slug               String        @unique
+  type               ProjectType
+  category           String
+  description        String        @db.Text
+  imageWebp          String
+  gallery            String[]      @default([])
+  pdfDocument        String?
+  status             ProjectStatus @default(IN_PROGRESS)
+  startDate          DateTime?
+  endDate            DateTime?
+  technologies       String[]      @default([])
+  clientName         String?
+  location           String?
+  budget             Float?
+  progressPercentage Int           @default(0)
+  isFeatured         Boolean       @default(false)
+  isActive           Boolean       @default(true)
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+  createdBy          String?
+  updatedBy          String?
+
+  @@map("projects")
+}
+
+model Client {
+  id         String   @id @default(uuid())
+  name       String
+  logoWebp   String
+  websiteUrl String?
+  order      Int      @default(0)
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("clients")
+}
+
+model Testimonial {
+  id         String   @id @default(uuid())
+  authorName String
+  authorRole String
+  company    String
+  avatarWebp String?
+  quote      String   @db.Text
+  rating     Int      @default(5)
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("testimonials")
+}
+
+model Contact {
+  id         String        @id @default(uuid())
+  name       String
+  company    String?
+  email      String
+  phone      String?
+  subject    String
+  message    String        @db.Text
+  status     ContactStatus @default(PENDING)
+  replyNotes String?       @db.Text
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+
+  @@map("contacts")
+}
+
+model SiteSetting {
+  id             String   @id @default(uuid())
+  companyName    String   @default("ARIONS")
+  slogan         String   @default("Innovación Tecnológica & Construcción de Vanguardia")
+  logoWebp       String?
+  faviconWebp    String?
+  contactEmail   String   @default("contacto@arions.tech")
+  contactPhone   String   @default("+56 9 1234 5678")
+  address        String   @default("Av. Providencia 1234, Oficina 501, Santiago, Chile")
+  socialLinks    Json?
+  primaryColor   String   @default("#0f172a")
+  secondaryColor String   @default("#3b82f6")
+  updatedAt      DateTime @updatedAt
+
+  @@map("site_settings")
+}
+
+model SiteVisit {
+  id        String   @id @default(uuid())
+  path      String
+  ipAddress String?
+  userAgent String?
+  visitedAt DateTime @default(now())
+
+  @@map("site_visits")
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  action    String
+  entity    String
+  entityId  String?
+  details   Json?
+  ipAddress String?
+  createdAt DateTime @default(now())
+
+  @@map("audit_logs")
+}
+
+model File {
+  id           String   @id @default(uuid())
+  originalName String
+  fileName     String
+  fileUrl      String
+  mimeType     String
+  size         Int
+  uploadedBy   String?
+  createdAt    DateTime @default(now())
+
+  @@map("files")
+}
