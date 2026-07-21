@@ -72,6 +72,15 @@ app.use('/api/v1/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 // 4. API Routes
 app.use('/api/v1', apiRoutes);
 
+// Root endpoint status check
+app.get('/', (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: 'API de ARIONS en línea y operativa 🚀',
+    version: '1.0.0'
+  });
+});
+
 // Health check endpoint
 app.get('/health', (req, res) => {
   res.json({
