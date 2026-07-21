@@ -10,6 +10,9 @@ import apiRoutes from './routes';
 
 const app = express();
 
+// Trust proxy for Render / Cloud reverse proxies (Express Rate Limit compatibility)
+app.set('trust proxy', 1);
+
 // 1. Security Middlewares
 app.use(helmet({
   crossOriginResourcePolicy: { policy: 'cross-origin' }
