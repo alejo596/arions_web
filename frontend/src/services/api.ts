@@ -1,6 +1,27 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || '/api/v1';
+const getNormalizedApiUrl = (): string => {
+  let rawUrl = (import.meta.env.VITE_API_URL as string | undefined)?.trim();
+  
+  if (!rawUrl) {
+    return import.meta.env.PROD 
+      ? 'https://arions-web.onrender.com/api/v1' 
+      : '/api/v1';
+  }
+
+  // Fix malformed protocol typos like "https:/arions-web..." -> "https://arions-web..."
+  if (rawUrl.startsWith('https:/') && !rawUrl.startsWith('https://')) {
+    rawUrl = rawUrl.replace('https:/', 'https://');
+  } else if (rawUrl.startsWith('http:/') && !rawUrl.startsWith('http://')) {
+    rawUrl = rawUrl.replace('http:/', 'http://');
+  } else if (!rawUrl.startsWith('http://') && !rawUrl.startsWith('https://') && !rawUrl.startsWith('/')) {
+    rawUrl = `https://${rawUrl}`;
+  }
+
+  return rawUrl.replace(/\/+$/, '');
+};
+
+const API_URL = getNormalizedApiUrl();
 
 export const api = axios.create({
   baseURL: API_URL,
