@@ -105,7 +105,16 @@ export const createProject = async (req: ExtendedRequest & AuthenticatedRequest,
       .replace(/[^\w\s-]/g, '')
       .replace(/[\s_-]+/g, '-') + '-' + Date.now();
 
-    const parsedTechs = typeof technologies === 'string' ? JSON.parse(technologies) : Array.isArray(technologies) ? technologies : [];
+    let parsedTechs: string[] = [];
+    if (typeof technologies === 'string') {
+      try {
+        parsedTechs = JSON.parse(technologies);
+      } catch {
+        parsedTechs = technologies.split(',').map((t: string) => t.trim()).filter(Boolean);
+      }
+    } else if (Array.isArray(technologies)) {
+      parsedTechs = technologies;
+    }
 
     const project = await prisma.project.create({
       data: {
@@ -181,7 +190,17 @@ export const updateProject = async (req: ExtendedRequest & AuthenticatedRequest,
     if (status) data.status = status as ProjectStatus;
     if (startDate) data.startDate = new Date(startDate);
     if (endDate) data.endDate = new Date(endDate);
-    if (technologies) data.technologies = typeof technologies === 'string' ? JSON.parse(technologies) : technologies;
+    if (technologies) {
+      if (typeof technologies === 'string') {
+        try {
+          data.technologies = JSON.parse(technologies);
+        } catch {
+          data.technologies = technologies.split(',').map((t: string) => t.trim()).filter(Boolean);
+        }
+      } else if (Array.isArray(technologies)) {
+        data.technologies = technologies;
+      }
+    }
     if (clientName !== undefined) data.clientName = clientName;
     if (location !== undefined) data.location = location;
     if (budget !== undefined) data.budget = budget ? parseFloat(budget) : null;
@@ -207,6 +226,7 @@ export const updateProject = async (req: ExtendedRequest & AuthenticatedRequest,
 
     return res.json({ success: true, data: updated });
   } catch (error) {
+    console.error('updateProject error:', error);
     return res.status(500).json({ success: false, message: 'Error al actualizar proyecto.' });
   }
 };

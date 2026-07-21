@@ -11,6 +11,7 @@ export const getClients = async (req: Request, res: Response) => {
     });
     return res.json({ success: true, data: clients });
   } catch (error) {
+    console.error('getClients error:', error);
     return res.status(500).json({ success: false, message: 'Error al obtener clientes.' });
   }
 };
@@ -31,6 +32,7 @@ export const createClient = async (req: ExtendedRequest & AuthenticatedRequest, 
 
     return res.status(201).json({ success: true, data: client });
   } catch (error) {
+    console.error('createClient error:', error);
     return res.status(500).json({ success: false, message: 'Error al crear cliente.' });
   }
 };
@@ -41,6 +43,7 @@ export const deleteClient = async (req: AuthenticatedRequest, res: Response) => 
     await prisma.client.update({ where: { id }, data: { isActive: false } });
     return res.json({ success: true, message: 'Cliente eliminado correctamente.' });
   } catch (error) {
+    console.error('deleteClient error:', error);
     return res.status(500).json({ success: false, message: 'Error al eliminar cliente.' });
   }
 };

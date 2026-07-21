@@ -35,10 +35,21 @@ export const AdminSettings: React.FC = () => {
     setSaved(false);
     try {
       const data = new FormData();
-      Object.entries(formData).forEach(([k, v]) => data.append(k, String(v)));
+      Object.entries(formData).forEach(([k, v]) => {
+        if (v !== undefined && v !== null) {
+          if (typeof v === 'object') {
+            data.append(k, JSON.stringify(v));
+          } else {
+            data.append(k, String(v));
+          }
+        }
+      });
       if (logoFile) data.append('logo', logoFile);
 
-      await api.put('/settings', data, { headers: { 'Content-Type': 'multipart/form-data' } });
+      const res = await api.put('/settings', data, { headers: { 'Content-Type': 'multipart/form-data' } });
+      if (res.data.data) {
+        setFormData(res.data.data);
+      }
       setSaved(true);
     } catch (err: any) {
       alert(err.response?.data?.message || 'Error al guardar configuración');

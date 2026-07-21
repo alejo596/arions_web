@@ -47,7 +47,19 @@ export const updateSiteSettings = async (req: ExtendedRequest & AuthenticatedReq
     if (address) data.address = address;
     if (primaryColor) data.primaryColor = primaryColor;
     if (secondaryColor) data.secondaryColor = secondaryColor;
-    if (socialLinks) data.socialLinks = typeof socialLinks === 'string' ? JSON.parse(socialLinks) : socialLinks;
+
+    if (socialLinks) {
+      if (typeof socialLinks === 'object' && socialLinks !== null) {
+        data.socialLinks = socialLinks;
+      } else if (typeof socialLinks === 'string' && socialLinks !== '[object Object]') {
+        try {
+          data.socialLinks = JSON.parse(socialLinks);
+        } catch {
+          data.socialLinks = undefined;
+        }
+      }
+    }
+
     if (req.fileWebpUrl) data.logoWebp = req.fileWebpUrl;
 
     if (setting) {
@@ -56,7 +68,16 @@ export const updateSiteSettings = async (req: ExtendedRequest & AuthenticatedReq
         data
       });
     } else {
-      setting = await prisma.siteSetting.create({ data });
+      setting = await prisma.siteSetting.create({
+        data: {
+          companyName: companyName || 'ARIONS',
+          slogan: slogan || 'Innovación Tecnológica & Construcción de Vanguardia',
+          contactEmail: contactEmail || 'contacto@arions.tech',
+          contactPhone: contactPhone || '+56 9 1234 5678',
+          address: address || 'Av. Providencia 1234, Oficina 501, Santiago, Chile',
+          ...data
+        }
+      });
     }
 
     await logAuditAction({
@@ -69,6 +90,7 @@ export const updateSiteSettings = async (req: ExtendedRequest & AuthenticatedReq
 
     return res.json({ success: true, data: setting });
   } catch (error) {
+    console.error('updateSiteSettings Error:', error);
     return res.status(500).json({ success: false, message: 'Error al actualizar configuración del sitio.' });
   }
 };

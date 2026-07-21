@@ -137,7 +137,16 @@ export const createNews = async (req: ExtendedRequest & AuthenticatedRequest, re
       .replace(/[\s_-]+/g, '-')
       .replace(/^-+|-+$/g, '') + '-' + Date.now();
 
-    const parsedTags = typeof tags === 'string' ? JSON.parse(tags) : Array.isArray(tags) ? tags : [];
+    let parsedTags: string[] = [];
+    if (typeof tags === 'string') {
+      try {
+        parsedTags = JSON.parse(tags);
+      } catch {
+        parsedTags = tags.split(',').map((t: string) => t.trim()).filter(Boolean);
+      }
+    } else if (Array.isArray(tags)) {
+      parsedTags = tags;
+    }
 
     const newNews = await prisma.news.create({
       data: {
@@ -190,7 +199,17 @@ export const updateNews = async (req: ExtendedRequest & AuthenticatedRequest, re
     if (categoryId) data.categoryId = categoryId;
     if (status) data.status = status;
     if (publishedAt) data.publishedAt = new Date(publishedAt);
-    if (tags) data.tags = typeof tags === 'string' ? JSON.parse(tags) : tags;
+    if (tags) {
+      if (typeof tags === 'string') {
+        try {
+          data.tags = JSON.parse(tags);
+        } catch {
+          data.tags = tags.split(',').map((t: string) => t.trim()).filter(Boolean);
+        }
+      } else if (Array.isArray(tags)) {
+        data.tags = tags;
+      }
+    }
     if (req.fileWebpUrl) data.imageWebp = req.fileWebpUrl;
 
     const updated = await prisma.news.update({
@@ -208,6 +227,7 @@ export const updateNews = async (req: ExtendedRequest & AuthenticatedRequest, re
 
     return res.json({ success: true, data: updated });
   } catch (error) {
+    console.error('updateNews Error:', error);
     return res.status(500).json({ success: false, message: 'Error al actualizar la noticia.' });
   }
 };
