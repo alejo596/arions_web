@@ -233,24 +233,27 @@ async function main() {
   });
 
   // 8. Site Settings
-  await prisma.siteSetting.create({
-    data: {
-      companyName: 'Arions Builds AI SpA',
-      slogan: 'Innovación Tecnológica, Inteligencia Artificial & Construcción',
-      logoWebp: '/logo.png',
-      contactEmail: 'contacto@arions.tech',
-      contactPhone: '+56 9 1234 5678',
-      address: 'Av. Providencia 1234, Oficina 501, Santiago, Chile',
-      primaryColor: '#0f172a',
-      secondaryColor: '#3b82f6',
-      socialLinks: {
-        linkedin: 'https://linkedin.com/company/arions',
-        github: 'https://github.com/arions-tech',
-        twitter: 'https://twitter.com/arions_tech',
-        instagram: 'https://instagram.com/arions_corp'
+  const existingSetting = await prisma.siteSetting.findFirst();
+  if (!existingSetting) {
+    await prisma.siteSetting.create({
+      data: {
+        companyName: 'Arions Builds AI SpA',
+        slogan: 'Innovación Tecnológica, Inteligencia Artificial & Construcción',
+        logoWebp: '/logo.png',
+        contactEmail: 'contacto@arions.tech',
+        contactPhone: '+56 9 1234 5678',
+        address: 'Av. Providencia 1234, Oficina 501, Santiago, Chile',
+        primaryColor: '#0f172a',
+        secondaryColor: '#3b82f6',
+        socialLinks: {
+          linkedin: 'https://linkedin.com/company/arions',
+          github: 'https://github.com/arions-tech',
+          twitter: 'https://twitter.com/arions_tech',
+          instagram: 'https://instagram.com/arions_corp'
+        }
       }
-    }
-  });
+    });
+  }
 
   console.log('✅ Seed finalizado exitosamente.');
 }
