@@ -18,7 +18,8 @@ const envSchema = z.object({
   SMTP_PORT: z.string().transform((val) => parseInt(val, 10)).default('587'),
   SMTP_USER: z.string().default(''),
   SMTP_PASS: z.string().default(''),
-  SMTP_FROM: z.string().default('ARIONS Notificaciones <contacto@arions.tech>')
+  SMTP_FROM: z.string().default('ARIONS Notificaciones <contacto@arions.tech>'),
+  CONTACT_EMAIL: z.string().default('contacto@arions.tech')
 });
 
 export const config = envSchema.parse(process.env);

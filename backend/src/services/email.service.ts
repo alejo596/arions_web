@@ -40,7 +40,7 @@ export const sendContactEmail = async (contactData: {
 
   return transporter.sendMail({
     from: config.SMTP_FROM,
-    to: config.contactEmail || 'contacto@arions.tech',
+    to: config.CONTACT_EMAIL || 'contacto@arions.tech',
     subject: `[Contacto ARIONS] ${contactData.subject}`,
     html: htmlContent
   });
