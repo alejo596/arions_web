@@ -1,8 +1,17 @@
 import axios from 'axios';
 
 const getNormalizedApiUrl = (): string => {
-  let rawUrl = (import.meta.env.VITE_API_URL as string | undefined)?.trim();
-  
+  let rawUrl = (import.meta.env.VITE_API_URL as string | undefined)?.trim() || '';
+
+  // Clean markdown brackets, parens, quotes or accidental wrapper formatting
+  rawUrl = rawUrl.replace(/[\[\]\(\)'"]/g, ' ').trim();
+
+  // Extract valid http/https URL if embedded
+  const match = rawUrl.match(/(https?:\/+[^\s]+)/i);
+  if (match) {
+    rawUrl = match[1];
+  }
+
   if (!rawUrl) {
     return import.meta.env.PROD 
       ? 'https://arions-web.onrender.com/api/v1' 
@@ -10,10 +19,10 @@ const getNormalizedApiUrl = (): string => {
   }
 
   // Fix malformed protocol typos like "https:/arions-web..." -> "https://arions-web..."
-  if (rawUrl.startsWith('https:/') && !rawUrl.startsWith('https://')) {
-    rawUrl = rawUrl.replace('https:/', 'https://');
-  } else if (rawUrl.startsWith('http:/') && !rawUrl.startsWith('http://')) {
-    rawUrl = rawUrl.replace('http:/', 'http://');
+  if (/^https:\/+[^\/]/i.test(rawUrl)) {
+    rawUrl = rawUrl.replace(/^https:\/+/i, 'https://');
+  } else if (/^http:\/+[^\/]/i.test(rawUrl)) {
+    rawUrl = rawUrl.replace(/^http:\/+/i, 'http://');
   } else if (!rawUrl.startsWith('http://') && !rawUrl.startsWith('https://') && !rawUrl.startsWith('/')) {
     rawUrl = `https://${rawUrl}`;
   }
