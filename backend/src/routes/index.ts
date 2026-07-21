@@ -11,6 +11,20 @@ import dashboardRoutes from './dashboard.routes';
 
 const router = Router();
 
+router.get('/', (req, res) => {
+  res.json({
+    success: true,
+    message: 'API RESTful v1 de ARIONS operacional 🚀',
+    endpoints: {
+      documentation: '/api/v1/docs',
+      health: '/health',
+      auth: '/api/v1/auth',
+      projects: '/api/v1/projects',
+      news: '/api/v1/news'
+    }
+  });
+});
+
 router.use('/auth', authRoutes);
 router.use('/users', userRoutes);
 router.use('/news', newsRoutes);
