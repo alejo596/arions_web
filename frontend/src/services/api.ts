@@ -27,6 +27,11 @@ const getNormalizedApiUrl = (): string => {
     rawUrl = `https://${rawUrl}`;
   }
 
+  // Auto-correct legacy/typo domain arions-backend.onrender.com -> arions-web.onrender.com
+  if (rawUrl.includes('arions-backend.onrender.com')) {
+    rawUrl = rawUrl.replace('arions-backend.onrender.com', 'arions-web.onrender.com');
+  }
+
   return rawUrl.replace(/\/+$/, '');
 };
 
