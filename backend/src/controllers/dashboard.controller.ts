@@ -83,6 +83,28 @@ export const getDashboardStats = async (req: AuthenticatedRequest, res: Response
   }
 };
 
+export const getPublicStats = async (req: Request, res: Response) => {
+  try {
+    const [totalProjects, totalClients, constructionProjects] = await Promise.all([
+      prisma.project.count({ where: { isActive: true } }),
+      prisma.client.count(),
+      prisma.project.count({ where: { isActive: true, type: ProjectType.CONSTRUCTION } })
+    ]);
+
+    return res.json({
+      success: true,
+      data: {
+        totalProjects: totalProjects > 0 ? totalProjects : 120,
+        totalClients: totalClients > 0 ? totalClients : 85,
+        yearsExperience: 12,
+        executedObras: constructionProjects > 0 ? constructionProjects : 95
+      }
+    });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: 'Error al obtener estadísticas públicas.' });
+  }
+};
+
 export const globalSearch = async (req: Request, res: Response) => {
   try {
     const { q = '' } = req.query;

@@ -1,21 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { api } from '../../services/api';
+import { useAdminSyncListener } from '../../hooks/useAdminSync';
 
 export const ClientsSection: React.FC = () => {
-  const [clients, setClients] = useState<any[]>([]);
-
-  useEffect(() => {
-    fetchClients();
-  }, []);
-
-  const fetchClients = async () => {
-    try {
+  const { data: clients = [], refetch } = useQuery({
+    queryKey: ['clients'],
+    queryFn: async () => {
       const res = await api.get('/clients');
-      setClients(res.data.data);
-    } catch (e) {
-      console.error(e);
+      return res.data.data || [];
     }
-  };
+  });
+
+  useAdminSyncListener(refetch);
 
   const defaultLogos = [
     { name: 'Tesla Energy', logo: 'https://upload.wikimedia.org/wikipedia/commons/e/e8/Tesla_logo.png' },
@@ -35,7 +32,7 @@ export const ClientsSection: React.FC = () => {
         </p>
 
         <div className="flex flex-wrap items-center justify-center gap-10 md:gap-16 opacity-75 grayscale hover:grayscale-0 transition-all duration-500">
-          {list.map((item, idx) => (
+          {list.map((item: any, idx: number) => (
             <div key={idx} className="flex items-center space-x-2 group">
               {item.logoWebp || item.logo ? (
                 <img

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../../services/api';
 import { Settings, Save, Upload, CheckCircle2 } from 'lucide-react';
+import { useNotifyAdminChange } from '../../hooks/useAdminSync';
 
 export const AdminSettings: React.FC = () => {
+  const { notifyChange } = useNotifyAdminChange();
   const [formData, setFormData] = useState({
     companyName: 'Arions Builds AI SpA',
     slogan: 'Innovación Tecnológica, Inteligencia Artificial & Construcción',
@@ -51,6 +53,7 @@ export const AdminSettings: React.FC = () => {
         setFormData(res.data.data);
       }
       setSaved(true);
+      notifyChange(['settings']);
     } catch (err: any) {
       alert(err.response?.data?.message || 'Error al guardar configuración');
     }

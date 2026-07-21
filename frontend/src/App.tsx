@@ -18,10 +18,12 @@ import { AdminContacts } from './pages/admin/AdminContacts';
 import { AdminSettings } from './pages/admin/AdminSettings';
 import { AdminAuditLogs } from './pages/admin/AdminAuditLogs';
 
-const queryClient = new QueryClient({
+export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      refetchOnWindowFocus: false,
+      refetchOnWindowFocus: true,
+      refetchOnMount: true,
+      staleTime: 0,
       retry: 1
     }
   }

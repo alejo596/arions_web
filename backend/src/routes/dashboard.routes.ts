@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import {
   getDashboardStats,
+  getPublicStats,
   globalSearch,
   getAuditLogs,
   exportDatabaseBackup,
@@ -11,6 +12,7 @@ import { authenticateJWT, authorizeRoles } from '../middlewares/auth.middleware'
 const router = Router();
 
 router.get('/search', globalSearch);
+router.get('/public-stats', getPublicStats);
 router.post('/visit', recordSiteVisit);
 
 // Protected Admin Endpoints

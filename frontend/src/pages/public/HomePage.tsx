@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { InitialSplashLoader } from '../../components/common/InitialSplashLoader';
 import { HeroSection } from '../../components/public/HeroSection';
 import { AboutSection } from '../../components/public/AboutSection';
 import { ServicesSection } from '../../components/public/ServicesSection';
@@ -10,8 +11,13 @@ import { StatsSection } from '../../components/public/StatsSection';
 import { ContactSection } from '../../components/public/ContactSection';
 
 export const HomePage: React.FC = () => {
+  const [loadingComplete, setLoadingComplete] = useState(false);
+
   return (
     <>
+      {!loadingComplete && (
+        <InitialSplashLoader onLoadingComplete={() => setLoadingComplete(true)} minDurationMs={3500} />
+      )}
       <HeroSection />
       <AboutSection />
       <ServicesSection />
@@ -24,3 +30,4 @@ export const HomePage: React.FC = () => {
     </>
   );
 };
+

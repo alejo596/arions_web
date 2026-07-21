@@ -1,24 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useQuery } from '@tanstack/react-query';
 import { api } from '../../services/api';
 import { Quote, Star, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useAdminSyncListener } from '../../hooks/useAdminSync';
 
 export const TestimonialsSection: React.FC = () => {
-  const [testimonials, setTestimonials] = useState<any[]>([]);
   const [activeIdx, setActiveIdx] = useState(0);
 
-  useEffect(() => {
-    fetchTestimonials();
-  }, []);
-
-  const fetchTestimonials = async () => {
-    try {
+  const { data: testimonials = [], refetch } = useQuery({
+    queryKey: ['testimonials'],
+    queryFn: async () => {
       const res = await api.get('/testimonials');
-      setTestimonials(res.data.data);
-    } catch (e) {
-      console.error(e);
+      return res.data.data || [];
     }
-  };
+  });
+
+  useAdminSyncListener(refetch);
 
   const defaultList = [
     {

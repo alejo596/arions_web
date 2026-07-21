@@ -1,7 +1,25 @@
 import React from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { api } from '../../services/api';
 import { Mail, Phone, MapPin, Linkedin, Github, Twitter, Instagram, ArrowUpRight } from 'lucide-react';
+import { useAdminSyncListener } from '../../hooks/useAdminSync';
 
 export const Footer: React.FC = () => {
+  const { data: settings, refetch } = useQuery({
+    queryKey: ['settings'],
+    queryFn: async () => {
+      const res = await api.get('/settings');
+      return res.data.data;
+    }
+  });
+
+  useAdminSyncListener(refetch);
+
+  const address = settings?.address || 'Av. Providencia 1234, Of. 501, Santiago, Chile';
+  const phone = settings?.contactPhone || '+56 9 1234 5678';
+  const email = settings?.contactEmail || 'contacto@arions.tech';
+  const logoUrl = settings?.logoWebp || '/logo.png';
+  const companyName = settings?.companyName || 'Arions Builds AI SpA';
   return (
     <footer className="bg-slate-950 border-t border-slate-900 pt-16 pb-12 text-slate-400">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -11,7 +29,7 @@ export const Footer: React.FC = () => {
           <div className="lg:col-span-2 space-y-4">
             <div className="flex items-center space-x-3">
               <div className="p-1.5 px-2 rounded-xl bg-slate-900/90 border border-slate-800 shadow-md flex items-center justify-center">
-                <img src="/logo.png" alt="Arions Builds AI SpA" className="h-10 w-auto object-contain filter drop-shadow-[0_0_6px_rgba(59,130,246,0.5)] brightness-110 contrast-125" />
+                <img src={logoUrl} alt={companyName} className="h-10 w-auto object-contain filter drop-shadow-[0_0_6px_rgba(59,130,246,0.5)] brightness-110 contrast-125" />
               </div>
               <div>
                 <span className="font-display text-lg font-bold tracking-tight text-white block leading-none">ARIONS</span>
@@ -19,7 +37,7 @@ export const Footer: React.FC = () => {
               </div>
             </div>
             <p className="text-sm text-slate-400 leading-relaxed max-w-sm">
-              <strong>Arions Builds AI SpA</strong> — Líderes en el desarrollo de proyectos de innovación tecnológica, Inteligencia Artificial, desarrollo de software y ejecución de obras menores de construcción.
+              <strong>{companyName}</strong> — Líderes en el desarrollo de proyectos de innovación tecnológica, Inteligencia Artificial, desarrollo de software y ejecución de obras menores de construcción.
             </p>
             <div className="flex space-x-3 pt-2">
               <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="p-2.5 rounded-xl bg-slate-900 hover:bg-blue-600 hover:text-white text-slate-400 transition-all border border-slate-800">
@@ -69,15 +87,15 @@ export const Footer: React.FC = () => {
             <div className="space-y-3 text-sm">
               <div className="flex items-start space-x-3">
                 <MapPin className="w-4 h-4 text-blue-400 mt-1 shrink-0" />
-                <span>Av. Providencia 1234, Of. 501, Santiago, Chile</span>
+                <span>{address}</span>
               </div>
               <div className="flex items-center space-x-3">
                 <Phone className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span>+56 9 1234 5678</span>
+                <span>{phone}</span>
               </div>
               <div className="flex items-center space-x-3">
                 <Mail className="w-4 h-4 text-amber-400 shrink-0" />
-                <span>contacto@arions.tech</span>
+                <span>{email}</span>
               </div>
               <div className="pt-2">
                 <a

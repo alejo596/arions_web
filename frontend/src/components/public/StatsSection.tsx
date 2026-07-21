@@ -1,13 +1,26 @@
 import React from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { api } from '../../services/api';
 import { AnimatedCounter } from '../common/AnimatedCounter';
 import { CheckCircle, Users, Award, Hammer } from 'lucide-react';
+import { useAdminSyncListener } from '../../hooks/useAdminSync';
 
 export const StatsSection: React.FC = () => {
+  const { data: statsData, refetch } = useQuery({
+    queryKey: ['public-stats'],
+    queryFn: async () => {
+      const res = await api.get('/dashboard/public-stats');
+      return res.data.data;
+    }
+  });
+
+  useAdminSyncListener(refetch);
+
   const stats = [
-    { label: 'Proyectos Realizados', value: 120, suffix: '+', icon: CheckCircle, color: 'text-blue-400' },
-    { label: 'Clientes Satisfechos', value: 85, suffix: '+', icon: Users, color: 'text-emerald-400' },
-    { label: 'Años de Experiencia', value: 12, suffix: ' Años', icon: Award, color: 'text-amber-400' },
-    { label: 'Obras Ejecutadas', value: 95, suffix: '+', icon: Hammer, color: 'text-purple-400' }
+    { label: 'Proyectos Realizados', value: statsData?.totalProjects || 120, suffix: '+', icon: CheckCircle, color: 'text-blue-400' },
+    { label: 'Clientes Satisfechos', value: statsData?.totalClients || 85, suffix: '+', icon: Users, color: 'text-emerald-400' },
+    { label: 'Años de Experiencia', value: statsData?.yearsExperience || 12, suffix: ' Años', icon: Award, color: 'text-amber-400' },
+    { label: 'Obras Ejecutadas', value: statsData?.executedObras || 95, suffix: '+', icon: Hammer, color: 'text-purple-400' }
   ];
 
   return (

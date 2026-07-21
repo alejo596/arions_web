@@ -1,31 +1,25 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { useQuery } from '@tanstack/react-query';
 import { api } from '../../services/api';
 import { ProjectLightboxModal } from '../common/ProjectLightboxModal';
 import { Cpu, Hammer, ExternalLink, Calendar, MapPin, Activity, FileText } from 'lucide-react';
+import { useAdminSyncListener } from '../../hooks/useAdminSync';
 
 export const ProjectsSection: React.FC = () => {
-  const [projects, setProjects] = useState<any[]>([]);
   const [filterType, setFilterType] = useState<'ALL' | 'INNOVATION' | 'CONSTRUCTION'>('ALL');
   const [selectedProject, setSelectedProject] = useState<any | null>(null);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchProjects();
-  }, [filterType]);
-
-  const fetchProjects = async () => {
-    setLoading(true);
-    try {
+  const { data: projects = [], isLoading: loading, refetch } = useQuery({
+    queryKey: ['projects', filterType],
+    queryFn: async () => {
       const typeParam = filterType !== 'ALL' ? `?type=${filterType}` : '';
       const res = await api.get(`/projects${typeParam}`);
-      setProjects(res.data.data);
-    } catch (err) {
-      console.error('Error al cargar proyectos:', err);
-    } finally {
-      setLoading(false);
+      return res.data.data || [];
     }
-  };
+  });
+
+  useAdminSyncListener(refetch);
 
   return (
     <section id="proyectos" className="py-24 bg-slate-950 relative">
@@ -80,7 +74,7 @@ export const ProjectsSection: React.FC = () => {
         {/* Projects Grid */}
         {!loading && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {projects.map((proj) => (
+            {projects.map((proj: any) => (
               <motion.div
                 key={proj.id}
                 initial={{ opacity: 0, y: 20 }}

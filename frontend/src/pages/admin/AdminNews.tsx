@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../../services/api';
 import { Search, Plus, Trash2, Edit3, Newspaper, X, Upload, Tag } from 'lucide-react';
+import { useNotifyAdminChange } from '../../hooks/useAdminSync';
 
 export const AdminNews: React.FC = () => {
+  const { notifyChange } = useNotifyAdminChange();
   const [news, setNews] = useState<any[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
   const [search, setSearch] = useState('');
@@ -71,6 +73,7 @@ export const AdminNews: React.FC = () => {
       setEditingNews(null);
       setSelectedFile(null);
       fetchNews();
+      notifyChange(['news', 'public-stats']);
     } catch (err: any) {
       alert(err.response?.data?.message || 'Error al guardar la noticia');
     }
@@ -81,6 +84,7 @@ export const AdminNews: React.FC = () => {
       try {
         await api.delete(`/news/${id}`);
         fetchNews();
+        notifyChange(['news', 'public-stats']);
       } catch (err) {
         console.error(err);
       }

@@ -1,27 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useQuery } from '@tanstack/react-query';
 import { api } from '../../services/api';
 import { Calendar, User, Tag, ArrowRight, X, Newspaper } from 'lucide-react';
+import { useAdminSyncListener } from '../../hooks/useAdminSync';
 
 export const NewsSection: React.FC = () => {
-  const [newsList, setNewsList] = useState<any[]>([]);
   const [selectedArticle, setSelectedArticle] = useState<any | null>(null);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchNews();
-  }, []);
-
-  const fetchNews = async () => {
-    try {
+  const { data: newsList = [], isLoading: loading, refetch } = useQuery({
+    queryKey: ['news'],
+    queryFn: async () => {
       const res = await api.get('/news?limit=3');
-      setNewsList(res.data.data);
-    } catch (err) {
-      console.error('Error al cargar noticias:', err);
-    } finally {
-      setLoading(false);
+      return res.data.data || [];
     }
-  };
+  });
+
+  useAdminSyncListener(refetch);
 
   return (
     <section id="noticias" className="py-24 bg-slate-950/80 relative">
@@ -42,7 +37,7 @@ export const NewsSection: React.FC = () => {
 
         {!loading && (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {newsList.map((item) => (
+            {newsList.map((item: any) => (
               <motion.article
                 key={item.id}
                 initial={{ opacity: 0, y: 20 }}

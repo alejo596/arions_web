@@ -1,8 +1,25 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useQuery } from '@tanstack/react-query';
+import { api } from '../../services/api';
 import { ArrowRight, ChevronDown, Sparkles, ShieldCheck, Zap } from 'lucide-react';
+import { useAdminSyncListener } from '../../hooks/useAdminSync';
 
 export const HeroSection: React.FC = () => {
+  const { data: settings, refetch } = useQuery({
+    queryKey: ['settings'],
+    queryFn: async () => {
+      const res = await api.get('/settings');
+      return res.data.data;
+    }
+  });
+
+  useAdminSyncListener(refetch);
+
+  const companyName = settings?.companyName || 'Arions Builds AI SpA';
+  const slogan = settings?.slogan || 'Innovación Tecnológica, Inteligencia Artificial & Construcción';
+  const logoUrl = settings?.logoWebp || '/logo.png';
+
   return (
     <section id="inicio" className="relative min-h-screen flex items-center justify-center pt-24 pb-16 overflow-hidden bg-slate-950">
       
@@ -31,7 +48,7 @@ export const HeroSection: React.FC = () => {
           className="flex justify-center mb-4"
         >
           <div className="p-4 sm:p-6 rounded-3xl bg-slate-900/80 border border-slate-800/80 shadow-2xl backdrop-blur-xl ring-1 ring-blue-500/30 shadow-blue-500/20 inline-flex items-center justify-center">
-            <img src="/logo.png" alt="Arions Builds AI SpA Logo" className="h-28 sm:h-36 w-auto object-contain filter drop-shadow-[0_10px_25px_rgba(59,130,246,0.5)] brightness-110 contrast-125" />
+            <img src={logoUrl} alt={`${companyName} Logo`} className="h-28 sm:h-36 w-auto object-contain filter drop-shadow-[0_10px_25px_rgba(59,130,246,0.5)] brightness-110 contrast-125" />
           </div>
         </motion.div>
 
@@ -43,7 +60,7 @@ export const HeroSection: React.FC = () => {
           className="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-slate-900/80 border border-blue-500/30 text-blue-400 text-xs font-semibold backdrop-blur-md shadow-xl"
         >
           <Sparkles className="w-4 h-4 text-blue-400 animate-spin" style={{ animationDuration: '6s' }} />
-          <span>Arions Builds AI SpA • Transformación Digital & Construcción</span>
+          <span>{companyName} • {slogan}</span>
           <span className="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
         </motion.div>
 

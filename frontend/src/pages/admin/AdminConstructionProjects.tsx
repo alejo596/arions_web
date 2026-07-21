@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../../services/api';
 import { Search, Plus, Trash2, Edit3, Hammer, X, Activity, DollarSign } from 'lucide-react';
+import { useNotifyAdminChange } from '../../hooks/useAdminSync';
 
 export const AdminConstructionProjects: React.FC = () => {
+  const { notifyChange } = useNotifyAdminChange();
   const [projects, setProjects] = useState<any[]>([]);
   const [search, setSearch] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
@@ -63,6 +65,7 @@ export const AdminConstructionProjects: React.FC = () => {
       setEditingProj(null);
       setFiles(null);
       fetchProjects();
+      notifyChange(['projects', 'public-stats']);
     } catch (err: any) {
       alert(err.response?.data?.message || 'Error al guardar proyecto de construcción');
     }
@@ -73,6 +76,7 @@ export const AdminConstructionProjects: React.FC = () => {
       try {
         await api.delete(`/projects/${id}`);
         fetchProjects();
+        notifyChange(['projects', 'public-stats']);
       } catch (err) {
         console.error(err);
       }

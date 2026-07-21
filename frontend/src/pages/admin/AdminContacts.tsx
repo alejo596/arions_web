@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../../services/api';
 import { MessageSquare, Search, Eye, CheckCircle2, Clock, Mail } from 'lucide-react';
+import { useNotifyAdminChange } from '../../hooks/useAdminSync';
 
 export const AdminContacts: React.FC = () => {
+  const { notifyChange } = useNotifyAdminChange();
   const [contacts, setContacts] = useState<any[]>([]);
   const [search, setSearch] = useState('');
   const [selectedContact, setSelectedContact] = useState<any | null>(null);
@@ -27,6 +29,7 @@ export const AdminContacts: React.FC = () => {
       await api.put(`/contacts/${selectedContact.id}/status`, { status, replyNotes });
       setSelectedContact(null);
       fetchContacts();
+      notifyChange(['public-stats']);
     } catch (err) {
       console.error(err);
     }
