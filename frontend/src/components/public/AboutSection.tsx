@@ -7,10 +7,10 @@ export const AboutSection: React.FC = () => {
 
   const team = [
     {
-      name: 'Alexander Ross',
+      name: 'Alejandro Vargas Pérez',
       role: 'CEO & Software Architect',
-      image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
-      bio: 'Más de 15 años de experiencia en arquitectura cloud, desarrollo de software escalable y liderazgo de proyectos de alta complejidad.'
+      image: '/alejandro-vargas.jpeg',
+      bio: 'Más de 15 años de experiencia en arquitectura cloud, desarrollo de software escalable, soluciones de inteligencia artificial y liderazgo de proyectos de alta complejidad.'
     },
     {
       name: 'Elena Morales',
@@ -19,10 +19,10 @@ export const AboutSection: React.FC = () => {
       bio: 'Especialista en Machine Learning, procesamiento de lenguaje natural y automatización de procesos industriales.'
     },
     {
-      name: 'Carlos Mendoza',
+      name: 'Yordan Medina',
       role: 'Jefe de Obras & Infraestructura',
       image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80',
-      bio: 'Ingeniero Constructor con vasta experiencia en dirección de obras menores, construcciones metálicas y mantenimiento corporativo.'
+      bio: 'Ingeniero Constructor con vasta experiencia en dirección de obras menores, construcciones metálicas, gestión técnica y mantenimiento corporativo.'
     }
   ];
 

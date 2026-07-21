@@ -10,7 +10,9 @@ export const Footer: React.FC = () => {
           {/* Brand Info */}
           <div className="lg:col-span-2 space-y-4">
             <div className="flex items-center space-x-3">
-              <img src="/logo.png" alt="Arions Builds AI SpA" className="h-12 w-auto object-contain" />
+              <div className="p-1.5 px-2 rounded-xl bg-slate-900/90 border border-slate-800 shadow-md flex items-center justify-center">
+                <img src="/logo.png" alt="Arions Builds AI SpA" className="h-10 w-auto object-contain filter drop-shadow-[0_0_6px_rgba(59,130,246,0.5)] brightness-110 contrast-125" />
+              </div>
               <div>
                 <span className="font-display text-lg font-bold tracking-tight text-white block leading-none">ARIONS</span>
                 <span className="text-[10px] font-semibold text-blue-400 tracking-widest uppercase block">BUILDS AI SPA.</span>

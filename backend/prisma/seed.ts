@@ -31,13 +31,13 @@ async function main() {
   // 2. Admin User
   const admin = await prisma.user.upsert({
     where: { email: 'admin@arions.tech' },
-    update: {},
+    update: { name: 'Alejandro Vargas Pérez', avatarUrl: '/alejandro-vargas.jpeg' },
     create: {
       email: 'admin@arions.tech',
-      name: 'Alexander Ross',
+      name: 'Alejandro Vargas Pérez',
       password: adminPassword,
       role: Role.ADMIN,
-      avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80'
+      avatarUrl: '/alejandro-vargas.jpeg'
     }
   });
 
@@ -55,10 +55,10 @@ async function main() {
 
   await prisma.user.upsert({
     where: { email: 'supervisor@arions.tech' },
-    update: {},
+    update: { name: 'Yordan Medina' },
     create: {
       email: 'supervisor@arions.tech',
-      name: 'Carlos Mendoza',
+      name: 'Yordan Medina',
       password: supervisorPassword,
       role: Role.SUPERVISOR,
       avatarUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80'

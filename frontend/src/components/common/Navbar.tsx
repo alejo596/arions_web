@@ -27,11 +27,13 @@ export const Navbar: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
           {/* Logo */}
           <a href="#" className="flex items-center space-x-3 group">
-            <img
-              src="/logo.png"
-              alt="Arions Builds AI SpA Logo"
-              className="h-11 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
-            />
+            <div className="p-1.5 px-2 rounded-xl bg-slate-900/90 border border-slate-700/60 shadow-lg backdrop-blur-md flex items-center justify-center group-hover:border-blue-500/50 group-hover:shadow-blue-500/20 transition-all">
+              <img
+                src="/logo.png"
+                alt="Arions Builds AI SpA Logo"
+                className="h-9 w-auto object-contain filter drop-shadow-[0_0_8px_rgba(59,130,246,0.6)] brightness-110 contrast-125 transition-transform duration-300 group-hover:scale-105"
+              />
+            </div>
             <div>
               <span className="font-display text-lg font-bold tracking-tight text-white block leading-none">ARIONS</span>
               <span className="text-[10px] font-semibold text-blue-400 tracking-widest uppercase block">BUILDS AI SPA.</span>

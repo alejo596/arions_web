@@ -28,9 +28,11 @@ export const HeroSection: React.FC = () => {
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5 }}
-          className="flex justify-center mb-2"
+          className="flex justify-center mb-4"
         >
-          <img src="/logo.png" alt="Arions Builds AI SpA Logo" className="h-28 sm:h-36 w-auto object-contain filter drop-shadow-[0_10px_25px_rgba(59,130,246,0.3)]" />
+          <div className="p-4 sm:p-6 rounded-3xl bg-slate-900/80 border border-slate-800/80 shadow-2xl backdrop-blur-xl ring-1 ring-blue-500/30 shadow-blue-500/20 inline-flex items-center justify-center">
+            <img src="/logo.png" alt="Arions Builds AI SpA Logo" className="h-28 sm:h-36 w-auto object-contain filter drop-shadow-[0_10px_25px_rgba(59,130,246,0.5)] brightness-110 contrast-125" />
+          </div>
         </motion.div>
 
         {/* Top Badge */}

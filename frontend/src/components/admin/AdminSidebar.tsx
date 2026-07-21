@@ -44,12 +44,16 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({ collapsed, onToggle 
         <div className="h-16 px-4 flex items-center justify-between border-b border-slate-800">
           {!collapsed && (
             <div className="flex items-center space-x-2">
-              <img src="/logo.png" alt="Logo" className="h-8 w-auto object-contain" />
+              <div className="p-1 rounded-lg bg-slate-950 border border-slate-800 shadow-sm flex items-center justify-center">
+                <img src="/logo.png" alt="Logo" className="h-7 w-auto object-contain filter drop-shadow-[0_0_4px_rgba(59,130,246,0.5)] brightness-110 contrast-125" />
+              </div>
               <span className="font-display font-bold text-white text-xs">Arions Builds AI SpA</span>
             </div>
           )}
           {collapsed && (
-            <img src="/logo.png" alt="Logo" className="h-8 w-auto object-contain mx-auto" />
+            <div className="p-1 rounded-lg bg-slate-950 border border-slate-800 shadow-sm flex items-center justify-center mx-auto">
+              <img src="/logo.png" alt="Logo" className="h-7 w-auto object-contain filter drop-shadow-[0_0_4px_rgba(59,130,246,0.5)] brightness-110 contrast-125" />
+            </div>
           )}
           <button
             onClick={onToggle}
