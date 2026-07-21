@@ -13,12 +13,6 @@ export const AboutSection: React.FC = () => {
       bio: 'Más de 15 años de experiencia en arquitectura cloud, desarrollo de software escalable, soluciones de inteligencia artificial y liderazgo de proyectos de alta complejidad.'
     },
     {
-      name: 'Elena Morales',
-      role: 'Directora de Innovación & IA',
-      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80',
-      bio: 'Especialista en Machine Learning, procesamiento de lenguaje natural y automatización de procesos industriales.'
-    },
-    {
       name: 'Yordan Medina',
       role: 'Jefe de Obras & Infraestructura',
       image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80',
@@ -146,7 +140,7 @@ export const AboutSection: React.FC = () => {
           )}
 
           {activeTab === 'equipo' && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
               {team.map((member, idx) => (
                 <div key={idx} className="bg-slate-900/60 rounded-2xl border border-slate-800 overflow-hidden text-center p-6 space-y-4 hover:border-blue-500/30 transition-all">
                   <img src={member.image} alt={member.name} className="w-24 h-24 rounded-full object-cover mx-auto ring-4 ring-blue-500/20" />
