@@ -33,7 +33,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({ collapsed, onToggle 
     { label: 'Clientes & Marcas', path: '/admin/clients', icon: Building2, roles: ['ADMIN', 'EDITOR', 'SUPERVISOR'] },
     { label: 'Usuarios & Roles', path: '/admin/users', icon: Users, roles: ['ADMIN'] },
     { label: 'Contactos', path: '/admin/contacts', icon: MessageSquare, roles: ['ADMIN', 'EDITOR', 'SUPERVISOR'] },
-    { label: 'Configuración Sitio', path: '/admin/settings', icon: Settings, roles: ['ADMIN'] },
+    { label: 'Configuración Sitio', path: '/admin/settings', icon: Settings, roles: ['ADMIN', 'EDITOR', 'SUPERVISOR'] },
     { label: 'Auditoría & Backup', path: '/admin/audit-logs', icon: ShieldAlert, roles: ['ADMIN'] }
   ];
 

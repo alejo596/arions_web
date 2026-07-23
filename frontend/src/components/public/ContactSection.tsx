@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useQuery } from '@tanstack/react-query';
 import { api } from '../../services/api';
 import { Mail, Phone, MapPin, Send, CheckCircle2, AlertCircle, Clock } from 'lucide-react';
+import { useAdminSyncListener } from '../../hooks/useAdminSync';
 
 interface ContactFormData {
   name: string;
@@ -16,6 +18,16 @@ export const ContactSection: React.FC = () => {
   const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<ContactFormData>();
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const { data: settings, refetch } = useQuery({
+    queryKey: ['settings'],
+    queryFn: async () => {
+      const res = await api.get('/settings');
+      return res.data.data;
+    }
+  });
+
+  useAdminSyncListener(refetch);
 
   const onSubmit = async (data: ContactFormData) => {
     setSuccessMessage(null);
@@ -58,7 +70,7 @@ export const ContactSection: React.FC = () => {
                   </div>
                   <div>
                     <h5 className="font-semibold text-white">Dirección Central</h5>
-                    <p className="text-slate-400 text-xs mt-0.5">Av. Providencia 1234, Oficina 501, Santiago, Chile</p>
+                    <p className="text-slate-400 text-xs mt-0.5">{settings?.address || 'Av. Providencia 1234, Oficina 501, Santiago, Chile'}</p>
                   </div>
                 </div>
 
@@ -68,7 +80,7 @@ export const ContactSection: React.FC = () => {
                   </div>
                   <div>
                     <h5 className="font-semibold text-white">Teléfonos de Atención</h5>
-                    <p className="text-slate-400 text-xs mt-0.5">+56 9 1234 5678 / +56 2 2987 6543</p>
+                    <p className="text-slate-400 text-xs mt-0.5">{settings?.contactPhone || '+56 9 1234 5678 / +56 2 2987 6543'}</p>
                   </div>
                 </div>
 
@@ -78,7 +90,7 @@ export const ContactSection: React.FC = () => {
                   </div>
                   <div>
                     <h5 className="font-semibold text-white">Correos Electrónicos</h5>
-                    <p className="text-slate-400 text-xs mt-0.5">contacto@arions.tech / obras@arions.tech</p>
+                    <p className="text-slate-400 text-xs mt-0.5">{settings?.contactEmail || 'contacto@arions.tech / obras@arions.tech'}</p>
                   </div>
                 </div>
 

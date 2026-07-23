@@ -9,7 +9,7 @@ router.get('/', getSiteSettings);
 router.put(
   '/',
   authenticateJWT,
-  authorizeRoles('ADMIN'),
+  authorizeRoles('ADMIN', 'EDITOR'),
   uploadMemory.single('logo'),
   processWebpAndPdf,
   updateSiteSettings
