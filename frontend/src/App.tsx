@@ -17,6 +17,7 @@ import { AdminConstructionProjects } from './pages/admin/AdminConstructionProjec
 import { AdminContacts } from './pages/admin/AdminContacts';
 import { AdminSettings } from './pages/admin/AdminSettings';
 import { AdminAuditLogs } from './pages/admin/AdminAuditLogs';
+import { AdminClients } from './pages/admin/AdminClients';
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -55,6 +56,7 @@ export const App: React.FC = () => {
                 <Route path="news" element={<AdminNews />} />
                 <Route path="projects-innovation" element={<AdminInnovationProjects />} />
                 <Route path="projects-construction" element={<AdminConstructionProjects />} />
+                <Route path="clients" element={<AdminClients />} />
                 <Route path="users" element={<AdminUsers />} />
                 <Route path="contacts" element={<AdminContacts />} />
                 <Route path="settings" element={<AdminSettings />} />

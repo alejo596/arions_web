@@ -14,15 +14,11 @@ export const ClientsSection: React.FC = () => {
 
   useAdminSyncListener(refetch);
 
-  const defaultLogos = [
-    { name: 'Tesla Energy', logo: 'https://upload.wikimedia.org/wikipedia/commons/e/e8/Tesla_logo.png' },
-    { name: 'SpaceX', logo: 'https://upload.wikimedia.org/wikipedia/commons/d/de/SpaceX-Logo.svg' },
-    { name: 'Autodesk', logo: 'https://upload.wikimedia.org/wikipedia/commons/e/ec/Autodesk_logo.svg' },
-    { name: 'Microsoft', logo: 'https://upload.wikimedia.org/wikipedia/commons/9/96/Microsoft_logo_%282012%29.svg' },
-    { name: 'IBM Quantum', logo: 'https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg' }
-  ];
+  if (!clients || clients.length === 0) {
+    return null;
+  }
 
-  const list = clients.length > 0 ? clients : defaultLogos;
+  const list = clients;
 
   return (
     <section className="py-16 bg-slate-950 border-y border-slate-900 overflow-hidden">

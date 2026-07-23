@@ -12,7 +12,8 @@ import {
   ShieldAlert,
   LogOut,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Building2
 } from 'lucide-react';
 
 interface AdminSidebarProps {
@@ -29,6 +30,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({ collapsed, onToggle 
     { label: 'Noticias & Blog', path: '/admin/news', icon: Newspaper, roles: ['ADMIN', 'EDITOR', 'SUPERVISOR'] },
     { label: 'Innovación', path: '/admin/projects-innovation', icon: Cpu, roles: ['ADMIN', 'EDITOR', 'SUPERVISOR'] },
     { label: 'Construcción', path: '/admin/projects-construction', icon: Hammer, roles: ['ADMIN', 'EDITOR', 'SUPERVISOR'] },
+    { label: 'Clientes & Marcas', path: '/admin/clients', icon: Building2, roles: ['ADMIN', 'EDITOR', 'SUPERVISOR'] },
     { label: 'Usuarios & Roles', path: '/admin/users', icon: Users, roles: ['ADMIN'] },
     { label: 'Contactos', path: '/admin/contacts', icon: MessageSquare, roles: ['ADMIN', 'EDITOR', 'SUPERVISOR'] },
     { label: 'Configuración Sitio', path: '/admin/settings', icon: Settings, roles: ['ADMIN'] },

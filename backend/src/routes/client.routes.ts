@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getClients, createClient, deleteClient } from '../controllers/client.controller';
+import { getClients, createClient, updateClient, deleteClient } from '../controllers/client.controller';
 import { authenticateJWT, authorizeRoles } from '../middlewares/auth.middleware';
 import { uploadMemory, processWebpAndPdf } from '../middlewares/upload.middleware';
 
@@ -14,6 +14,15 @@ router.post(
   processWebpAndPdf,
   createClient
 );
+router.put(
+  '/:id',
+  authenticateJWT,
+  authorizeRoles('ADMIN', 'EDITOR'),
+  uploadMemory.single('logo'),
+  processWebpAndPdf,
+  updateClient
+);
 router.delete('/:id', authenticateJWT, authorizeRoles('ADMIN'), deleteClient);
+
 
 export default router;
