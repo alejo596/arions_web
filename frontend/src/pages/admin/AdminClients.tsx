@@ -9,6 +9,7 @@ export const AdminClients: React.FC = () => {
   const [search, setSearch] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
   const [editingClient, setEditingClient] = useState<any | null>(null);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -26,6 +27,7 @@ export const AdminClients: React.FC = () => {
     try {
       const res = await api.get('/clients');
       setClients(res.data.data || []);
+      setSelectedIds([]);
     } catch (err) {
       console.error('Error fetching clients:', err);
     }
@@ -92,6 +94,40 @@ export const AdminClients: React.FC = () => {
     }
   };
 
+  const handleToggleSelect = (id: string) => {
+    setSelectedIds(prev =>
+      prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
+    );
+  };
+
+  const handleToggleSelectAll = () => {
+    const visibleIds = filteredClients.map(c => c.id);
+    const allVisibleSelected = visibleIds.length > 0 && visibleIds.every(id => selectedIds.includes(id));
+
+    if (allVisibleSelected) {
+      setSelectedIds(prev => prev.filter(id => !visibleIds.includes(id)));
+    } else {
+      setSelectedIds(prev => {
+        const otherSelected = prev.filter(id => !visibleIds.includes(id));
+        return [...otherSelected, ...visibleIds];
+      });
+    }
+  };
+
+  const handleBulkDelete = async () => {
+    if (selectedIds.length === 0) return;
+    if (confirm(`¿Deseas eliminar las ${selectedIds.length} empresas seleccionadas?`)) {
+      try {
+        await Promise.all(selectedIds.map(id => api.delete(`/clients/${id}`)));
+        fetchClients();
+        notifyChange(['clients']);
+      } catch (err) {
+        console.error('Error deleting multiple clients:', err);
+        alert('Ocurrió un error al eliminar algunas empresas.');
+      }
+    }
+  };
+
   const filteredClients = clients.filter(c =>
     c.name.toLowerCase().includes(search.toLowerCase())
   );
@@ -122,15 +158,26 @@ export const AdminClients: React.FC = () => {
         </button>
       </div>
 
-      <div className="p-4 bg-slate-900 border border-slate-800 rounded-2xl flex items-center">
-        <Search className="w-4 h-4 text-slate-400 mr-2" />
-        <input
-          type="text"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Buscar empresas por nombre..."
-          className="w-full bg-transparent text-white placeholder-slate-500 text-sm focus:outline-none"
-        />
+      <div className="p-4 bg-slate-900 border border-slate-800 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex items-center flex-1 w-full">
+          <Search className="w-4 h-4 text-slate-400 mr-2" />
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Buscar empresas por nombre..."
+            className="w-full bg-transparent text-white placeholder-slate-500 text-sm focus:outline-none"
+          />
+        </div>
+        {selectedIds.length > 0 && (
+          <button
+            onClick={handleBulkDelete}
+            className="px-4 py-2 bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold rounded-xl flex items-center space-x-2 shadow-lg shadow-rose-500/20 transition-all self-end sm:self-auto"
+          >
+            <Trash2 className="w-4 h-4" />
+            <span>Eliminar Seleccionados ({selectedIds.length})</span>
+          </button>
+        )}
       </div>
 
       <div className="bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden shadow-xl">
@@ -138,6 +185,14 @@ export const AdminClients: React.FC = () => {
           <table className="w-full text-left text-xs text-slate-300">
             <thead className="bg-slate-950/80 text-slate-400 font-semibold uppercase tracking-wider border-b border-slate-800">
               <tr>
+                <th className="p-4 w-12 text-center">
+                  <input
+                    type="checkbox"
+                    checked={filteredClients.length > 0 && filteredClients.every(c => selectedIds.includes(c.id))}
+                    onChange={handleToggleSelectAll}
+                    className="w-4 h-4 rounded border-slate-800 bg-slate-950 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                  />
+                </th>
                 <th className="p-4">Logo</th>
                 <th className="p-4">Nombre</th>
                 <th className="p-4">Sitio Web</th>
@@ -148,13 +203,21 @@ export const AdminClients: React.FC = () => {
             <tbody className="divide-y divide-slate-800/60">
               {filteredClients.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="p-8 text-center text-slate-500">
+                  <td colSpan={6} className="p-8 text-center text-slate-500">
                     No se encontraron empresas registradas.
                   </td>
                 </tr>
               ) : (
                 filteredClients.map((client) => (
                   <tr key={client.id} className="hover:bg-slate-800/40 transition-colors">
+                    <td className="p-4 w-12 text-center">
+                      <input
+                        type="checkbox"
+                        checked={selectedIds.includes(client.id)}
+                        onChange={() => handleToggleSelect(client.id)}
+                        className="w-4 h-4 rounded border-slate-800 bg-slate-950 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                      />
+                    </td>
                     <td className="p-4">
                       <div className="p-2 bg-slate-950/60 border border-slate-800/60 rounded-xl inline-flex items-center justify-center w-16 h-12">
                         <img
