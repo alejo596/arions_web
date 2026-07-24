@@ -8,6 +8,7 @@ import testimonialRoutes from './testimonial.routes';
 import contactRoutes from './contact.routes';
 import settingRoutes from './setting.routes';
 import dashboardRoutes from './dashboard.routes';
+import budgetRoutes from './budget.routes';
 
 const router = Router();
 
@@ -20,7 +21,8 @@ router.get('/', (req, res) => {
       health: '/health',
       auth: '/api/v1/auth',
       projects: '/api/v1/projects',
-      news: '/api/v1/news'
+      news: '/api/v1/news',
+      budgets: '/api/v1/budgets'
     }
   });
 });
@@ -34,5 +36,6 @@ router.use('/testimonials', testimonialRoutes);
 router.use('/contacts', contactRoutes);
 router.use('/settings', settingRoutes);
 router.use('/dashboard', dashboardRoutes);
+router.use('/budgets', budgetRoutes);
 
 export default router;

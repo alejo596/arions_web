@@ -129,6 +129,7 @@ model Project {
   updatedAt          DateTime      @updatedAt
   createdBy          String?
   updatedBy          String?
+  budgets            Budget[]
 
   @@map("projects")
 }
@@ -230,3 +231,23 @@ model File {
 
   @@map("files")
 }
+
+model Budget {
+  id          String   @id @default(uuid())
+  clientName  String
+  clientRut   String?
+  clientEmail String
+  projectType String   // "INNOVATION" or "CONSTRUCTION"
+  projectId   String?
+  project     Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  items       Json     // Array of { description: string, quantity: number, unitPrice: number }
+  subtotal    Float
+  iva         Float    // 19%
+  total       Float
+  pdfUrl      String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("budgets")
+}
+
